@@ -1,32 +1,37 @@
 export const songs = [
     {
-        title: "Di ve nha",
-        src: require('./assets/songs/di-ve-nha.mp3'),
+        id: 1,
+        title: "Đi Về Nhà",
+        src: "https://raw.githubusercontent.com/sonht1109/songs/main/songs/di-ve-nha.mp3",
         artwork: require('./assets/img/di-ve-nha.jpg'),
-        artist: "Den Vau x Justatee"
+        artist: "Đen Vâu x Justatee"
     },
     {
-        title: "Chua bao gio",
-        src: require("./assets/songs/chua-bao-gio.mp3"),
+        id: 2,
+        title: "Chưa bao giờ",
+        src: "https://raw.githubusercontent.com/sonht1109/songs/main/songs/chua-bao-gio.mp3",
         artwork: require('./assets/img/chua-bao-gio.jpg'),
-        artist: "Nguyen Hoang Dung"
+        artist: "Nguyễn Hoàng Dũng"
     },
     {
-        title: "Chay ngay di",
-        src: require('./assets/songs/chay-ngay-di.mp3'),
+        id: 3,
+        title: "Chạy Ngay Đi",
+        src: "https://raw.githubusercontent.com/sonht1109/songs/main/songs/chay-ngay-di.mp3",
         artwork: require('./assets/img/chay-ngay-di.jpg'),
-        artist: "Son Tung M-TP"
+        artist: "Sơn Tùng M-TP"
     },
     {
-        title: "Dong kiem em",
-        src: require('./assets/songs/dong-kiem-em.mp3'),
+        id: 4,
+        title: "Đông Kiếm Em",
+        src: "https://raw.githubusercontent.com/sonht1109/songs/main/songs/dong-kiem-em.mp3",
         artwork: require('./assets/img/dong-kiem-em.jpg'),
-        artist: "Vu."
+        artist: "Vũ."
     },
     {
-        title: "Hanh tinh song song",
-        src: require('./assets/songs/hanh-tinh-song-song.mp3'),
+        id: 5,
+        title: "Hành Tinh Song Song",
+        src: "https://raw.githubusercontent.com/sonht1109/songs/main/songs/hanh-tinh-song-song.mp3",
         artwork: require('./assets/img/hanh-tinh-song-song.jpg'),
-        artist: "Vu."
+        artist: "Vũ."
     }
 ]

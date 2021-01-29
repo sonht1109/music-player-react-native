@@ -8,14 +8,14 @@
 
 import React from 'react'
 import { StyleSheet, Text, View } from 'react-native'
-import Player from './src/components'
+import Player from './src/components/Player/index';
 
 export default function App() {
   return (
-    <View>
+    <View style={{flex: 1, backgroundColor: "#1a1a1a"}}>
       <Player />
     </View>
   )
 }
 
-const styles = StyleSheet.create({})
+// const styles = StyleSheet.create({})

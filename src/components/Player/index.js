@@ -47,7 +47,7 @@ export default function Player() {
                 TrackPlayer.addEventListener(TrackPlayerEvents.PLAYBACK_TRACK_CHANGED, async () => {
                     // console.log('playbackChange', e)
                     const trackId = (await TrackPlayer.getCurrentTrack()) - 1
-                    // trackId can be -1 when queue is loading
+                    // currentTrack can be 0 when queue is loading
                     console.log('trackID ', trackId, 'current ', index.current)
                     if (trackId !== index.current && trackId > 0) {
                         isItFromUser.current = false
@@ -93,7 +93,7 @@ export default function Player() {
     const goNext = async() => {
         try{
             // cannot use songindex here
-            // coz it is different from songindex that is out of this block
+            // coz songindex here is different from songindex that is out of this block
             slider.current.scrollToOffset({
                 offset: width * (index.current + 1)
             })

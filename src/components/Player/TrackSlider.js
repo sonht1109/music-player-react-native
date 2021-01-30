@@ -12,8 +12,8 @@ export default function TrackSlider() {
     }
 
     const formatTime = (time) => {
-        const min = Math.floor(time / 60)
-        const sec = Math.ceil(time - min*60)
+        const min = Math.floor(Math.floor(time) / 60)
+        const sec = Math.ceil(Math.floor(time) - min*60)
         return min + ':' + `${sec < 10 ? '0' + sec : sec}`
     }
 

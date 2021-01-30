@@ -123,7 +123,7 @@ export default function Player() {
             </Animated.View>
         )
     }
-    console.log('songIndex', songIndex)
+    // console.log('songIndex', songIndex)
 
     return (
         <SafeAreaView style={styles.container}>

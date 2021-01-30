@@ -26,7 +26,7 @@ export default function Player() {
         })
         TrackPlayer.setupPlayer()
             .then(async () => {
-                console.log('player ready')
+                console.log('Player ready')
                 await TrackPlayer.reset()
                 await TrackPlayer.add([...songs])
                 await TrackPlayer.skip(songs[songIndex].id)
@@ -45,19 +45,18 @@ export default function Player() {
                     ],
                 });
                 TrackPlayer.addEventListener(TrackPlayerEvents.PLAYBACK_TRACK_CHANGED, async () => {
+                    // console.log('playbackChange', e)
                     const trackId = (await TrackPlayer.getCurrentTrack()) - 1
-                    console.log('trackId', trackId, 'index', index.current);
                     // trackId can be -1 when queue is loading
+                    console.log('trackID ', trackId, 'current ', index.current)
                     if (trackId !== index.current && trackId > 0) {
-                        setSongIndex(trackId)
                         isItFromUser.current = false
-                        if (trackId > index.current) {
-                            goNext()
-                        }
-                        else {
-                            goPrev()
-                        }
-                        isItFromUser.current = true;
+                        // setSongIndex(trackId)
+                        // if(trackId > index.current){
+                        //     goNext()
+                        // }
+                        // else goPrev()
+                        goNext()
                     }
                 })
 
@@ -93,10 +92,13 @@ export default function Player() {
 
     const goNext = async() => {
         try{
+            // cannot use songindex here
+            // coz it is different from songindex that is out of this block
             slider.current.scrollToOffset({
-                offset: width * (songIndex + 1)
+                offset: width * (index.current + 1)
             })
             await TrackPlayer.play();
+            isItFromUser.current = true
         }
         catch(err){
             console.log(err)
@@ -106,9 +108,10 @@ export default function Player() {
     const goPrev = async() => {
         try{
             slider.current.scrollToOffset({
-                offset: width * (songIndex - 1)
+                offset: width * (index.current - 1)
             })
             await TrackPlayer.play();
+            isItFromUser.current = true
         }
         catch(err){
             console.log(err)
@@ -121,7 +124,7 @@ export default function Player() {
         } catch (error) {
           console.error('exitPlayer', error);
         }
-      };
+    };
 
     const renderItem = ({ item, index }) => {
         return (
@@ -145,7 +148,7 @@ export default function Player() {
             </Animated.View>
         )
     }
-    // console.log('song', songIndex)
+    // console.log('songIndex', songIndex)
 
     return (
         <SafeAreaView style={styles.container}>
@@ -155,8 +158,8 @@ export default function Player() {
                     ref={slider}
                     showsHorizontalScrollIndicator={false}
                     horizontal
-                    scrollEventThrottle={16}
                     pagingEnabled
+                    scrollEventThrottle={16}
                     data={songs}
                     renderItem={renderItem}
                     keyExtractor={item => 'song' + item.id}

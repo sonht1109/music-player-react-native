@@ -14,7 +14,7 @@ export default function TrackSlider() {
     const formatTime = (time) => {
         const min = Math.floor(Math.floor(time) / 60)
         const sec = Math.ceil(Math.floor(time) - min*60)
-        return min + ':' + `${sec < 10 ? '0' + sec : sec}`
+        return min + ':' + `${sec < 10 ? `0${sec}` : sec}`
     }
 
     return (
@@ -30,7 +30,7 @@ export default function TrackSlider() {
             />
             <View style={{justifyContent: 'space-between', flexDirection: "row"}}>
                 <Text style={styles.time}>{formatTime(position)}</Text>
-                <Text style={styles.time}>{formatTime(duration)}</Text>
+                <Text style={styles.time}>-{formatTime(duration - position)}</Text>
             </View>
         </View>
     )

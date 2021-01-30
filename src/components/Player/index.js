@@ -3,7 +3,7 @@ import { Animated, SafeAreaView, StyleSheet, Dimensions, View, Text } from 'reac
 import { songs } from '../../songs';
 import Controller from './Controller';
 import TrackSlider from './TrackSlider';
-import TrackPlayer from 'react-native-track-player'
+import TrackPlayer, { CAPABILITY_PAUSE, CAPABILITY_PLAY, CAPABILITY_SKIP_TO_NEXT, CAPABILITY_SKIP_TO_PREVIOUS } from 'react-native-track-player'
 import TrackPlayerEvents from 'react-native-track-player/lib/eventTypes';
 
 const { width } = Dimensions.get('window')
@@ -17,6 +17,7 @@ export default function Player() {
     const slider = useRef(null)
     const index = useRef(0);
     const isPlayerReady = useRef(false);
+    const isItFromUser = useRef(true)
 
     useEffect(() => {
         scrollX.addListener(({ value }) => {
@@ -35,46 +36,59 @@ export default function Player() {
                 TrackPlayer.updateOptions({
                     stopWithApp: true,
                     alwaysPauseOnInterruption: true,
-                    // capabilities: [
-                    //     Capability.Play,
-                    //     Capability.Pause,
-                    //     Capability.SkipToNext,
-                    //     Capability.SkipToPrevious,
-                    // ],
+                    // controls on notification tab
+                    capabilities: [
+                        CAPABILITY_PLAY,
+                        CAPABILITY_PAUSE,
+                        CAPABILITY_SKIP_TO_NEXT,
+                        CAPABILITY_SKIP_TO_PREVIOUS,
+                    ],
                 });
                 TrackPlayer.addEventListener(TrackPlayerEvents.PLAYBACK_TRACK_CHANGED, async () => {
-                    // console.log('song end ')
                     const trackId = (await TrackPlayer.getCurrentTrack()) - 1
                     console.log('trackId', trackId, 'index', index.current);
-                    // trackId can be -1 queue is loading
+                    // trackId can be -1 when queue is loading
                     if (trackId !== index.current && trackId > 0) {
                         setSongIndex(trackId)
+                        isItFromUser.current = false
                         if (trackId > index.current) {
                             goNext()
                         }
                         else {
                             goPrev()
                         }
+                        isItFromUser.current = true;
                     }
+                })
+
+                // interrupt when sound is playing from other app
+                // go with alwaysPauseOnInterruption: true
+                TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_DUCK, e => {
+                    if(e.paused){
+                        TrackPlayer.pause()
+                    }
+                    else TrackPlayer.play()
                 })
             })
             .catch(err => console.log(err))
 
-        // return () => {
-        //     scrollX.removeAllListeners()
-        //     TrackPlayer.destroy()
-        // }
+        //fire when no songs is in queue
+        return () => {
+            scrollX.removeAllListeners()
+            TrackPlayer.destroy()
+            exitPlayer()
+        }
     }, [])
 
     useEffect(() => {
-        if(isPlayerReady.current){
+        if(isPlayerReady.current && isItFromUser.current){
             TrackPlayer.skip(songs[songIndex].id)
             .then(() => {
                 console.log('track changed')
             })
             .catch(err => console.log(err))
-            index.current = songIndex;
         }
+        index.current = songIndex;
     }, [songIndex])
 
     const goNext = async() => {
@@ -101,6 +115,14 @@ export default function Player() {
         }
     }
 
+    const exitPlayer = async () => {
+        try {
+          await TrackPlayer.stop();
+        } catch (error) {
+          console.error('exitPlayer', error);
+        }
+      };
+
     const renderItem = ({ item, index }) => {
         return (
             <Animated.View
@@ -123,7 +145,7 @@ export default function Player() {
             </Animated.View>
         )
     }
-    // console.log('songIndex', songIndex)
+    // console.log('song', songIndex)
 
     return (
         <SafeAreaView style={styles.container}>

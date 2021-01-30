@@ -28,7 +28,7 @@ export default function Player() {
                 console.log('player ready')
                 await TrackPlayer.reset()
                 await TrackPlayer.add([...songs])
-                await TrackPlayer.skip(songs[0].id)
+                await TrackPlayer.skip(songs[songIndex].id)
                 TrackPlayer.play()
                 isPlayerReady.current = true
 
@@ -46,7 +46,7 @@ export default function Player() {
                     // console.log('song end ')
                     const trackId = (await TrackPlayer.getCurrentTrack()) - 1
                     console.log('trackId', trackId, 'index', index.current);
-                    // trackId can be -1 when refresh
+                    // trackId can be -1 queue is loading
                     if (trackId !== index.current && trackId > 0) {
                         setSongIndex(trackId)
                         if (trackId > index.current) {
@@ -60,10 +60,10 @@ export default function Player() {
             })
             .catch(err => console.log(err))
 
-        return () => {
-            scrollX.removeAllListeners()
-            TrackPlayer.destroy()
-        }
+        // return () => {
+        //     scrollX.removeAllListeners()
+        //     TrackPlayer.destroy()
+        // }
     }, [])
 
     useEffect(() => {

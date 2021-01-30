@@ -155,6 +155,7 @@ export default function Player() {
                     ref={slider}
                     showsHorizontalScrollIndicator={false}
                     horizontal
+                    scrollEventThrottle={16}
                     pagingEnabled
                     data={songs}
                     renderItem={renderItem}

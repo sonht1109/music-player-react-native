@@ -65,12 +65,12 @@ export default function SongList({isShowModel, songIndex, changeSongIndex}) {
                 }}
                 onPress={() => changeSongIndex()}
                 >
-                    <Text style={{ color: 'white', fontSize: 20 }}>
+                    <Text style={{ color: 'white', fontSize: 18, fontWeight: '700' }}>
                         YOUR LIST
                     </Text>
                     <Icon
                     name="chevron-down-outline"
-                    size={30}
+                    size={25}
                     color="white"
                     style={{position: 'absolute', right: 10}}
                     />

@@ -109,15 +109,19 @@ export default function Player() {
           await TrackPlayer.pause();
         });
 
-        // TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_SKIP, async () => {
-        //   console.log('skip next')
-        //   await TrackPlayer.skipToNext();
-        // });
+        TrackPlayer.addEventListener('remote-next', async () => {
+          console.log('skip next')
+          slider.current.scrollToOffset({
+            offset: width * (index.current + 1)
+          })
+        });
 
-        // TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_PREVIOUS, async () => {
-        //   console.log('skip prev')
-        //   await TrackPlayer.skipToPrevious();
-        // });
+        TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_PREVIOUS, async () => {
+          console.log('skip prev')
+          slider.current.scrollToOffset({
+            offset: width * (index.current - 1)
+          })
+        });
 
         // TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_STOP, () => {
         //   TrackPlayer.destroy();

@@ -7,7 +7,7 @@
  */
 
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import {View } from 'react-native'
 import Player from './src/components/Player/index';
 
 export default function App() {
@@ -17,5 +17,3 @@ export default function App() {
     </View>
   )
 }
-
-// const styles = StyleSheet.create({})

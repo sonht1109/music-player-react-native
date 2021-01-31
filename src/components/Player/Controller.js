@@ -9,6 +9,7 @@ export default function Controller({ goNext, goPrev, onRepeat }) {
     // 0: no repeat
     // 1: repeat one
     // 2: repeat all
+    
     const [shuffle, setShuffle] = useState(false)
 
     const switchRepeat = () => {

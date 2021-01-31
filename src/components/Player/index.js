@@ -5,6 +5,8 @@ import Controller from './Controller';
 import TrackSlider from './TrackSlider';
 import TrackPlayer, { CAPABILITY_PAUSE, CAPABILITY_PLAY, CAPABILITY_SKIP_TO_NEXT, CAPABILITY_SKIP_TO_PREVIOUS } from 'react-native-track-player'
 import TrackPlayerEvents from 'react-native-track-player/lib/eventTypes';
+import Icon from 'react-native-vector-icons/Ionicons';
+import SongList from '../SongList';
 
 const { width } = Dimensions.get('window')
 
@@ -19,6 +21,7 @@ export default function Player() {
   const isPlayerReady = useRef(false);
   const isItFromUser = useRef(true)
   const repeat = useRef(0)
+  const [isShowModel, setIsShowModel] = useState(false)
 
   useEffect(() => {
     scrollX.addListener(({ value }) => {
@@ -37,13 +40,19 @@ export default function Player() {
         TrackPlayer.updateOptions({
           stopWithApp: true,
           alwaysPauseOnInterruption: true,
-          // controls on notification tab
+          // controls on notification
           capabilities: [
             CAPABILITY_PLAY,
             CAPABILITY_PAUSE,
             CAPABILITY_SKIP_TO_NEXT,
             CAPABILITY_SKIP_TO_PREVIOUS,
           ],
+          compactCapabilities: [
+            CAPABILITY_PLAY,
+            CAPABILITY_PAUSE,
+            CAPABILITY_SKIP_TO_NEXT,
+            CAPABILITY_SKIP_TO_PREVIOUS,
+          ]
         });
         TrackPlayer.addEventListener(TrackPlayerEvents.PLAYBACK_TRACK_CHANGED, async () => {
           // console.log('playbackChange', e)
@@ -58,26 +67,27 @@ export default function Player() {
             // }
             // else goPrev()
             if (repeat.current === 1) {
-              TrackPlayer.skip(songs[trackId - 1].id)
+              await TrackPlayer.skip(songs[trackId - 1].id)
               isItFromUser.current = true
             }
             else goNext()
           }
         })
 
-        TrackPlayer.addEventListener(TrackPlayerEvents.PLAYBACK_QUEUE_ENDED, (e) => {
+        TrackPlayer.addEventListener(TrackPlayerEvents.PLAYBACK_QUEUE_ENDED,
+          async (e) => {
           console.log('queue end', e)
           isItFromUser.current = false
           if (repeat.current === 1 && e.track) {
-            TrackPlayer.skip(songs[e.track - 1].id)
+            await TrackPlayer.skip(songs[e.track - 1].id)
           }
           if (repeat.current === 2) {
-              TrackPlayer.skip(songs[0].id)
+            await TrackPlayer.skip(songs[0].id)
               .then(() => slider.current.scrollToOffset({
                 offset: 0
               }))
               .catch(err => console.log(err))
-              index.current = 0
+            index.current = 0
           }
           isItFromUser.current = true
         })
@@ -90,6 +100,28 @@ export default function Player() {
           }
           else TrackPlayer.play()
         })
+
+        TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_PLAY, async () => {
+          await TrackPlayer.play();
+        });
+
+        TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_PAUSE, async () => {
+          await TrackPlayer.pause();
+        });
+
+        // TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_SKIP, async () => {
+        //   console.log('skip next')
+        //   await TrackPlayer.skipToNext();
+        // });
+
+        // TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_PREVIOUS, async () => {
+        //   console.log('skip prev')
+        //   await TrackPlayer.skipToPrevious();
+        // });
+
+        // TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_STOP, () => {
+        //   TrackPlayer.destroy();
+        // });
 
       })
       .catch(err => console.log(err))
@@ -118,7 +150,7 @@ export default function Player() {
       // cannot use songindex here
       // coz songindex here is different from songindex that is out of this block
       let offset = index.current + 1
-      if(repeat.current === 2 && index.current === songs.length - 1){
+      if (repeat.current === 2 && index.current === songs.length - 1) {
         offset = 0
       }
 
@@ -136,7 +168,7 @@ export default function Player() {
   const goPrev = async () => {
     try {
       let offset = index.current - 1
-      if(repeat.current === 2 && index.current === 0){
+      if (repeat.current === 2 && index.current === 0) {
         offset = songs.length - 1
       }
 
@@ -185,6 +217,24 @@ export default function Player() {
 
   return (
     <SafeAreaView style={styles.container}>
+      <Icon
+      name="list-outline" color="white" size={30} onPress={()=> {
+        setIsShowModel(true)
+      }}
+      style={{marginLeft: "auto", marginRight: 10, marginTop: 20}}
+      />
+      <SongList
+      songIndex={songIndex}
+      isShowModel={isShowModel}
+      changeSongIndex={(index) => {
+        if(index){
+          slider.current.scrollToOffset({
+            offset: width * index
+          })
+        }
+        setIsShowModel(false)
+      }}
+      />
       {/* artwork of song */}
       <SafeAreaView style={styles.list}>
         <Animated.FlatList
@@ -224,7 +274,7 @@ export default function Player() {
         goNext={goNext}
         goPrev={goPrev}
         onRepeat={() => {
-          if(repeat.current === 2) repeat.current = 0
+          if (repeat.current === 2) repeat.current = 0
           else ++repeat.current
         }}
       />

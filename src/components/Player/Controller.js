@@ -1,9 +1,20 @@
-import React, { useEffect, useMemo, useRef } from 'react'
-import { ActivityIndicator, StyleSheet, TouchableOpacity, View } from 'react-native'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import TrackPlayer, { usePlaybackState } from 'react-native-track-player';
 
-export default function Controller({ goNext, goPrev }) {
+export default function Controller({ goNext, goPrev, onRepeat }) {
+
+    const [repeat, setRepeat] = useState(0)
+    const [shuffle, setShuffle] = useState(false)
+
+    const switchRepeat = () => {
+        setRepeat((prev) => {
+            if (prev === 2) return 0
+            return ++prev
+        })
+        onRepeat()
+    }
 
     const playbackState = usePlaybackState()
     // 3 : playing
@@ -17,7 +28,7 @@ export default function Controller({ goNext, goPrev }) {
                     <Icon name='pause-outline' color="white" size={45} />
                 )
             case 2:
-                return(
+                return (
                     <Icon name='play-outline' color="white" size={45} />
                 )
             default:
@@ -36,10 +47,16 @@ export default function Controller({ goNext, goPrev }) {
     return (
         <View style={styles.container}>
 
-            <TouchableOpacity>
-                <Icon
-                    name="repeat-outline" color="white" size={22}
-                    style={{ opacity: 0.5 }} />
+            <TouchableOpacity onPress={switchRepeat}>
+                <View style={{flexDirection: "row"}}>
+                    <Icon
+                        name="repeat-outline" color="white" size={22}
+                        style={{ opacity: repeat !== 0 ? 1 : 0.4 }} />
+                    {repeat === 1 &&
+                    <Text style={{color: "white", fontSize: 10}}>
+                        1
+                    </Text>}
+                </View>
             </TouchableOpacity>
 
             <TouchableOpacity onPress={goPrev}>
@@ -54,10 +71,10 @@ export default function Controller({ goNext, goPrev }) {
                 <Icon name="play-forward-outline" color="white" size={45} />
             </TouchableOpacity>
 
-            <TouchableOpacity>
+            <TouchableOpacity onPress={() => setShuffle(prev => !prev)}>
                 <Icon
                     name="shuffle-outline" color="white" size={22}
-                    style={{ opacity: 0.5 }} />
+                    style={{ opacity: shuffle ? 1 : 0.4 }} />
             </TouchableOpacity>
 
         </View>

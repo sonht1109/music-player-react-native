@@ -225,7 +225,7 @@ export default function Player() {
       name="list-outline" color="white" size={30} onPress={()=> {
         setIsShowModel(true)
       }}
-      style={{marginLeft: "auto", marginRight: 10, marginTop: 20}}
+      style={{marginLeft: "auto", marginRight: 20, marginTop: 20}}
       />
       <SongList
       songIndex={songIndex}
@@ -268,7 +268,7 @@ export default function Player() {
       </View>
 
       {/* slider */}
-      <View style={{ flex: 0.1 }}>
+      <View style={{ flex: 0.1, marginTop: 20 }}>
         <TrackSlider
         />
       </View>
@@ -297,7 +297,9 @@ const styles = StyleSheet.create({
     fontSize: 30,
     color: "white",
     fontWeight: '700',
-    textAlign: "center"
+    textAlign: "center",
+    paddingHorizontal: 50,
+    flexWrap: "wrap"
   },
   artist: {
     fontSize: 16,

@@ -94,5 +94,6 @@ const styles = StyleSheet.create({
     modalInner: {
         width: "100%",
         backgroundColor: "rgba(26, 26, 26, 0.6)",
+        flex: 1
     }
 })

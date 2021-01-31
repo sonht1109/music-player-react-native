@@ -78,9 +78,6 @@ export default function Player() {
               }))
               .catch(err => console.log(err))
               index.current = 0
-              // slider.scrollToOffset({
-              //   offset: 0
-              // })
           }
           isItFromUser.current = true
         })
@@ -120,8 +117,13 @@ export default function Player() {
     try {
       // cannot use songindex here
       // coz songindex here is different from songindex that is out of this block
+      let offset = index.current + 1
+      if(repeat.current === 2 && index.current === songs.length - 1){
+        offset = 0
+      }
+
       slider.current.scrollToOffset({
-        offset: width * (index.current + 1)
+        offset: width * offset
       })
       // await TrackPlayer.play();
       isItFromUser.current = true
@@ -133,8 +135,13 @@ export default function Player() {
 
   const goPrev = async () => {
     try {
+      let offset = index.current - 1
+      if(repeat.current === 2 && index.current === 0){
+        offset = songs.length - 1
+      }
+
       slider.current.scrollToOffset({
-        offset: width * (index.current - 1)
+        offset: width * offset
       })
       // await TrackPlayer.play();
       isItFromUser.current = true

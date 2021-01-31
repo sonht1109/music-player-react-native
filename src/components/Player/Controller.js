@@ -6,6 +6,9 @@ import TrackPlayer, { usePlaybackState } from 'react-native-track-player';
 export default function Controller({ goNext, goPrev, onRepeat }) {
 
     const [repeat, setRepeat] = useState(0)
+    // 0: no repeat
+    // 1: repeat one
+    // 2: repeat all
     const [shuffle, setShuffle] = useState(false)
 
     const switchRepeat = () => {
@@ -52,10 +55,9 @@ export default function Controller({ goNext, goPrev, onRepeat }) {
                     <Icon
                         name="repeat-outline" color="white" size={22}
                         style={{ opacity: repeat !== 0 ? 1 : 0.4 }} />
-                    {repeat === 1 &&
-                    <Text style={{color: "white", fontSize: 10}}>
+                    <Text style={{color: "white", fontSize: 10, opacity: repeat === 1 ? 1 : 0}}>
                         1
-                    </Text>}
+                    </Text>
                 </View>
             </TouchableOpacity>
 

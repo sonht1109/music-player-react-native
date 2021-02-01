@@ -199,6 +199,12 @@ export default function Player() {
   const goPrev = async () => {
     try {
       let offset = index.current - 1
+      if(isShuffle.current && shuffleIndex.current <= songs.length){
+        if(shuffleIndex.current === 0){
+          shuffleIndex.current = songs.length - 1
+        }
+        offset = shuffleList.current[shuffleIndex.current --].id - 1
+      }
       if (repeat.current === 2 && index.current === 0) {
         offset = songs.length - 1
       }

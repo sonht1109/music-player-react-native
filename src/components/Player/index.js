@@ -174,12 +174,11 @@ export default function Player() {
       // cannot use songindex here
       // coz songindex here is different from songindex that is out of this block
       let offset = index.current + 1
-
       if(isShuffle.current && shuffleIndex.current <= songs.length){
         if(shuffleIndex.current === songs.length){
           shuffleIndex.current = 0
         }
-        offset = shuffleList.current[shuffleIndex.current ++].id
+        offset = shuffleList.current[shuffleIndex.current ++].id - 1
       }
 
       if (repeat.current === 2 && index.current === songs.length - 1) {

@@ -73,17 +73,13 @@ export default function Player() {
           ]
         });
         TrackPlayer.addEventListener(TrackPlayerEvents.PLAYBACK_TRACK_CHANGED, async () => {
+          // await TrackPlayer.stop()
           // console.log('playbackChange', e)
           const trackId = (await TrackPlayer.getCurrentTrack()) - 1
           // currentTrack can be 0 when queue is loading
           console.log('trackID', trackId, 'current', index.current, 'repeat', repeat.current)
           if (trackId !== index.current && trackId > 0) {
             isItFromUser.current = false
-            // setSongIndex(trackId)
-            // if(trackId > index.current){
-            //     goNext()
-            // }
-            // else goPrev()
             if (repeat.current === 1) {
               await TrackPlayer.skip(songs[trackId - 1].id)
               isItFromUser.current = true

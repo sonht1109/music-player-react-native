@@ -15,12 +15,15 @@ export default function SongList({isShowModel, songIndex, changeSongIndex}) {
     const renderItem = (item, index) => {
         return (
             <TouchableOpacity
+                activeOpacity={0.8}
                 key={item.id}
                 style={{
                     flexDirection: "row", padding: 20,
                     alignItems: "center",
                     backgroundColor: songIndex === index 
-                    ? "rgba(255, 255, 255, 0.5)" : "rgb(26, 26, 26)",
+                    ? "rgba(150, 150, 150, 1)" : "rgb(26, 26, 26)",
+                    borderTopWidth: 0.5,
+                    borderTopColor: "rgba(150, 150, 150, 0.3)"
                 }}
                 onPress={() => onSetSongIndex(index)}
                 >
@@ -55,6 +58,7 @@ export default function SongList({isShowModel, songIndex, changeSongIndex}) {
         >
             <View style={styles.modal}>
                 <TouchableOpacity
+                activeOpacity={0.8}
                 style={{
                     paddingVertical: 30,
                     backgroundColor: "rgb(26, 26, 26)",
@@ -86,14 +90,11 @@ export default function SongList({isShowModel, songIndex, changeSongIndex}) {
 const styles = StyleSheet.create({
     modal: {
         flex: 1,
-        backgroundColor: "rgba(26, 26, 26, 0.6)",
-        // backgroundColor: "white",
+        backgroundColor: "rgba(26, 26, 26, 0.8)",
         justifyContent: "center",
         alignItems: 'center'
     },
     modalInner: {
         width: "100%",
-        backgroundColor: "rgba(26, 26, 26, 0.6)",
-        // flex: 1
     }
 })

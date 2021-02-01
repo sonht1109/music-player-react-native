@@ -99,7 +99,7 @@ export default function Player() {
           if (repeat.current === 1 && e.track) {
             await TrackPlayer.skip(songs[e.track - 1].id)
           }
-          if (repeat.current === 2) {
+          if (repeat.current === 2 && !isShuffle.current) {
             await TrackPlayer.skip(songs[0].id)
               .then(() => slider.current.scrollToOffset({
                 offset: 0
@@ -107,7 +107,7 @@ export default function Player() {
               .catch(err => console.log(err))
             index.current = 0
           }
-          else if(isShuffle){
+          if(isShuffle.current){
             goNext()
           }
           isItFromUser.current = true

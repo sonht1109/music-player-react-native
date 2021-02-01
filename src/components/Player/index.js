@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Animated, SafeAreaView, StyleSheet, Dimensions, View, Text } from 'react-native'
 import { songs } from '../../songs';
 import Controller from './Controller';
@@ -21,7 +21,25 @@ export default function Player() {
   const isPlayerReady = useRef(false);
   const isItFromUser = useRef(true)
   const repeat = useRef(0)
+  const isShuffle = useRef(false)
   const [isShowModel, setIsShowModel] = useState(false)
+  const shuffleIndex = useRef(0)
+  const shuffleList = useRef([...songs])
+
+  const handleShuffleList = ()=> {
+    {
+      var currentIndex = songs.length, tempValue, randomIndex
+      var tempList = [...songs]
+      while(currentIndex !== 0){
+        randomIndex = Math.floor(Math.random() * currentIndex)
+        currentIndex --
+        tempValue = tempList[currentIndex]
+        tempList[currentIndex] = tempList[randomIndex]
+        tempList[randomIndex] = tempValue
+      }
+      return tempList
+    }
+  }
 
   useEffect(() => {
     scrollX.addListener(({ value }) => {
@@ -58,7 +76,7 @@ export default function Player() {
           // console.log('playbackChange', e)
           const trackId = (await TrackPlayer.getCurrentTrack()) - 1
           // currentTrack can be 0 when queue is loading
-          console.log('trackID ', trackId, 'current ', index.current, 'repeat', repeat.current)
+          console.log('trackID', trackId, 'current', index.current, 'repeat', repeat.current)
           if (trackId !== index.current && trackId > 0) {
             isItFromUser.current = false
             // setSongIndex(trackId)
@@ -76,7 +94,7 @@ export default function Player() {
 
         TrackPlayer.addEventListener(TrackPlayerEvents.PLAYBACK_QUEUE_ENDED,
           async (e) => {
-          console.log('queue end', e)
+          console.log('queue end', e, (await TrackPlayer.getQueue()).length)
           isItFromUser.current = false
           if (repeat.current === 1 && e.track) {
             await TrackPlayer.skip(songs[e.track - 1].id)
@@ -88,6 +106,9 @@ export default function Player() {
               }))
               .catch(err => console.log(err))
             index.current = 0
+          }
+          else if(isShuffle){
+            goNext()
           }
           isItFromUser.current = true
         })
@@ -130,7 +151,6 @@ export default function Player() {
       })
       .catch(err => console.log(err))
 
-    //fire when no songs is in queue
     return () => {
       scrollX.removeAllListeners()
       TrackPlayer.destroy()
@@ -154,6 +174,14 @@ export default function Player() {
       // cannot use songindex here
       // coz songindex here is different from songindex that is out of this block
       let offset = index.current + 1
+
+      if(isShuffle.current && shuffleIndex.current <= songs.length){
+        if(shuffleIndex.current === songs.length){
+          shuffleIndex.current = 0
+        }
+        offset = shuffleList.current[shuffleIndex.current ++].id
+      }
+
       if (repeat.current === 2 && index.current === songs.length - 1) {
         offset = 0
       }
@@ -227,13 +255,15 @@ export default function Player() {
       }}
       style={{marginLeft: "auto", marginRight: 20, marginTop: 20}}
       />
+      {/* song list */}
       <SongList
       songIndex={songIndex}
       isShowModel={isShowModel}
       changeSongIndex={(index) => {
-        if(index){
+        console.log(index)
+        if(index >= 0){
           slider.current.scrollToOffset({
-            offset: width * index
+            offset: index * width
           })
         }
         setIsShowModel(false)
@@ -280,6 +310,11 @@ export default function Player() {
         onRepeat={() => {
           if (repeat.current === 2) repeat.current = 0
           else ++repeat.current
+        }}
+        onShuffle={()=>{
+          isShuffle.current = !isShuffle.current
+          shuffleIndex.current = 0
+          shuffleList.current = handleShuffleList()
         }}
       />
     </SafeAreaView>

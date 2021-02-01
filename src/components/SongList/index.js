@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, Image, Modal, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { songs } from '../../songs'
 import Icon from 'react-native-vector-icons/Ionicons'
 
@@ -12,7 +12,7 @@ export default function SongList({isShowModel, songIndex, changeSongIndex}) {
         else changeSongIndex()
     }
 
-    const modalItem = (item, index) => {
+    const renderItem = (item, index) => {
         return (
             <TouchableOpacity
                 key={item.id}
@@ -76,7 +76,7 @@ export default function SongList({isShowModel, songIndex, changeSongIndex}) {
                     />
                 </TouchableOpacity>
                 <ScrollView style={styles.modalInner}>
-                    {songs.map((item, index) => modalItem(item, index))}
+                    {songs.map((item, index) => renderItem(item, index))}
                 </ScrollView>
             </View>
         </Modal>
@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
     modalInner: {
         width: "100%",
         backgroundColor: "rgba(26, 26, 26, 0.6)",
-        flex: 1
+        // flex: 1
     }
 })

@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from 'rea
 import Icon from 'react-native-vector-icons/Ionicons'
 import TrackPlayer, { usePlaybackState } from 'react-native-track-player';
 
-export default function Controller({ goNext, goPrev, onRepeat }) {
+export default function Controller({ goNext, goPrev, onRepeat, onShuffle }) {
 
     const [repeat, setRepeat] = useState(0)
     // 0: no repeat
@@ -74,7 +74,10 @@ export default function Controller({ goNext, goPrev, onRepeat }) {
                 <Icon name="play-forward-outline" color="white" size={45} />
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={() => setShuffle(prev => !prev)}>
+            <TouchableOpacity onPress={() => {
+                setShuffle(prev => !prev)
+                onShuffle()
+            }}>
                 <Icon
                     name="shuffle-outline" color="white" size={22}
                     style={{ opacity: shuffle ? 1 : 0.4 }} />
